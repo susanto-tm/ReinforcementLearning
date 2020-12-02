@@ -44,6 +44,8 @@ for episode in range(EPISODES):
     done = False
 
     while not done:
+        # current_discrete_state is a combination and
+        # argmax chooses the action with the highest Q value for that combination
         action = np.argmax(q_table[current_discrete_state])
         new_state, reward, done, _ = env.step(action)
         new_discrete_state = get_discrete_state(new_state)
@@ -52,6 +54,7 @@ for episode in range(EPISODES):
             env.render()
 
         if not done:
+            # backpropagation: finding new Q value to increase reward and updating old Q value
             max_future_q = np.max(q_table[new_discrete_state])
             current_q = q_table[current_discrete_state + (action,)]
             new_q = (1 - LEARNING_RATE) * current_q + LEARNING_RATE * (reward + DISCOUNT * max_future_q)
